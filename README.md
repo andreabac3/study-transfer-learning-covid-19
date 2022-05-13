@@ -7,6 +7,7 @@
 
 This repository contains the official code of the research paper [Study on transfer learning capabilities for pneumonia classification in chest-x-rays images](https://www.sciencedirect.com/science/article/pii/S0169260722002152) pubblished at the [Computer Methods and Programs in Biomedicine](https://www.journals.elsevier.com/computer-methods-and-programs-in-biomedicine) Journal.
 
+![Transfer learning](github_images/transfer_learning-1.png)
 
 </div>
 
@@ -36,6 +37,8 @@ bash setup.sh
 ```
 
 ## Dataset construction
+![Dataset](github_images/dataset-1.png)
+
 To be compliant to copyright issue, we release the file list that compose our dataset.
 To build the dataset: <br>
 (*i*) You should download the Kaggle data from the [competition page](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia). <br>
