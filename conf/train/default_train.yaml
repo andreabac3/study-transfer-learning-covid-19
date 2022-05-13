@@ -3,17 +3,14 @@ seed: 42
 
 # optimization
 pl_trainer:
-  #gpus: 1
-  #precision: 16
-  #amp_backend: 'apex'
-  #accumulate_grad_batches: 4
-  #gradient_clip_val: 10.0
-  max_epochs: 2
+  gpus: 1
+  precision: 16
+  max_epochs: 40
   val_check_interval: 1.0
   num_sanity_val_steps: 0
-  enable_progress_bar: True
-  deterministic: False
-  fast_dev_run: False
+  enable_progress_bar: true
+  deterministic: false
+  fast_dev_run: false
 
 
 model_checkpoint:

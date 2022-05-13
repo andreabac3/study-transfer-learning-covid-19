@@ -121,14 +121,16 @@ def train(conf: omegaconf.DictConfig) -> None:
     ckpt_folder: str = hydra.utils.to_absolute_path(f"./ckpt/{conf.data.subset_percentage}/{conf.train.model_type}/")
     os.makedirs(ckpt_folder, exist_ok=True)
 
-    callbacks_store = build_callbacks(cfg=conf, checkpoint_path=ckpt_folder)
+    callbacks_store = [RichProgressBar()] if conf.train.pl_trainer.fast_dev_run else build_callbacks(cfg=conf, checkpoint_path=ckpt_folder)
+    
+    if not torch.cuda.is_available():
+        conf.train.pl_trainer.gpus = 0
+        conf.train.pl_trainer.precision = 32
 
     trainer = pl.Trainer(
         **conf.train.pl_trainer,
-        callbacks=callbacks_store,  # [ImagePredictionLogger(samples, class_to_use_list=conf.class_to_use)],
+        callbacks=callbacks_store,
         logger=logger,
-        #gpus=gpus(conf),
-        #precision=enable_16precision(conf)
     )
 
     # module fit

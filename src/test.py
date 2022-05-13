@@ -7,6 +7,7 @@ from typing import Dict, List, Optional
 import yaml
 
 warnings.filterwarnings("ignore")
+import torch
 import wandb
 import hydra
 import omegaconf
@@ -28,11 +29,7 @@ def build_callbacks(
     cfg: omegaconf.DictConfig, checkpoint_path: str = ""
 ) -> List[Callback]:
     # callbacks declaration
-    callbacks_store: List[Callback] = [RichProgressBar()]
-
-    if cfg.train.apply_early_stopping:
-        callbacks_store.append(EarlyStopping(**cfg.train.early_stopping))
-
+    
     callbacks_store.append(
         ModelCheckpoint(
             **cfg.train.model_checkpoint,
@@ -111,18 +108,17 @@ def train(conf: omegaconf.DictConfig) -> None:
         yaml_conf: str = OmegaConf.to_yaml(cfg=conf)
         (Path(logger.experiment.dir) / "hparams.yaml").write_text(yaml_conf)
 
-    callbacks_store = build_callbacks(cfg=conf, checkpoint_path=logger.experiment.dir)
 
-    # pl_data_module.setup()
-    # samples = next(iter(pl_data_module.test_dataloader()))
-    # callback_image = ImagePredictionLogger(samples, class_to_use_list=conf.labels.class_to_use)
-    # callbacks_store.append(callback_image)
+    callbacks_store: List[Callback] = [RichProgressBar()]
+
+    if not torch.cuda.is_available():
+        conf.train.pl_trainer.gpus = 0
+        conf.train.pl_trainer.precision = 32
+
     trainer = pl.Trainer(
         **conf.train.pl_trainer,
         callbacks=callbacks_store,
-        logger=logger,
-        #gpus=gpus(conf),
-        #precision=enable_16precision(conf)
+        logger=logger
     )
     # module test
     model_path: str = (
