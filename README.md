@@ -37,7 +37,8 @@ bash setup.sh
 ```
 
 ## Dataset construction
-![Dataset](github_images/dataset-1.png)
+<img src="github_images/dataset-1.png" alt="dataset" height="50%" width="50%"/>
+
 
 To be compliant to copyright issue, we release the file list that compose our dataset.
 To build the dataset: <br>
