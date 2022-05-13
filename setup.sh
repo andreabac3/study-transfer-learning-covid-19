@@ -20,3 +20,6 @@ fi
 
 # install python requirements
 pip install -r requirements.txt
+
+touch .env
+echo PROJECT_ROOT="$(pwd)" >> .env

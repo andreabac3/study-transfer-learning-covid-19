@@ -19,21 +19,13 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, RichProg
 from pytorch_lightning.loggers import WandbLogger
 
 from src.callbacks import ImagePredictionLogger
-from src.common.utils import load_envs, PROJECT_ROOT
+from src.common.utils import load_envs, PROJECT_ROOT, set_determinism_the_old_way, gpus, enable_16precision
 from src.pl_data_modules import BasePLDataModule
 from src.pl_modules import BasePLModule
 
 # Load environment variables
 load_envs()
 
-
-def set_determinism_the_old_way(deterministic: bool):
-    # determinism for cudnn
-    torch.backends.cudnn.deterministic = deterministic
-    if deterministic:
-        # fixing non-deterministic part of horovod
-        # https://github.com/PyTorchLightning/pytorch-lightning/pull/1572/files#r420279383
-        os.environ["HOROVOD_FUSION_THRESHOLD"] = str(0)
 
 
 def build_callbacks(cfg: omegaconf.DictConfig, checkpoint_path: str = "") -> List[Callback]:
@@ -85,6 +77,18 @@ def train(conf: omegaconf.DictConfig) -> None:
     set_determinism_the_old_way(True)
     logger = None
 
+
+    if conf.train.pl_trainer.fast_dev_run:
+        hydra.utils.log.info(
+            f"Debug mode <{conf.train.pl_trainer.fast_dev_run}>. Forcing debugger configuration"
+        )
+        # Debuggers don't like GPUs nor multiprocessing
+        conf.train.pl_trainer.gpus = 0
+        conf.train.pl_trainer.precision = 32
+        conf.data.datamodule.num_workers = {k: 0 for k in conf.data.datamodule.num_workers}
+        # Switch wandb mode to offline to prevent online logging
+        conf.logging.wandb_arg.mode = "offline"
+
     # data module declaration
     pl_data_module = BasePLDataModule(conf)
 
@@ -93,7 +97,7 @@ def train(conf: omegaconf.DictConfig) -> None:
 
     # callbacks declaration
 
-    if "wandb" in conf.logging:
+    if conf.logging.wandb.log:
         class_to_use_str: str = (
             str(conf.labels.class_to_use).strip("[]").replace(",", "-").replace("'", "").replace(" ", "")
         )
@@ -123,12 +127,14 @@ def train(conf: omegaconf.DictConfig) -> None:
         **conf.train.pl_trainer,
         callbacks=callbacks_store,  # [ImagePredictionLogger(samples, class_to_use_list=conf.class_to_use)],
         logger=logger,
+        gpus=gpus(conf),
+        precision=enable_16precision(conf)
     )
 
     # module fit
     trainer.fit(pl_module, datamodule=pl_data_module)
-
-    logger.experiment.finish()
+    if conf.logging.wandb.log:
+        logger.experiment.finish()
 
 
 @hydra.main(config_path="../conf", config_name="root")

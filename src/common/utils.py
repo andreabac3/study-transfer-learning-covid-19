@@ -2,15 +2,44 @@ import os
 import json
 from pathlib import Path
 from typing import Optional
+from multiprocessing import cpu_count
 
 import dotenv
+
+import torch
+from omegaconf import DictConfig
+
+
+
+def gpus(conf: DictConfig) -> int:
+    """Utility to determine the number of GPUs to use."""
+    return conf.train.pl_trainer.gpus if torch.cuda.is_available() else 0
+
+
+def enable_16precision(conf: DictConfig) -> int:
+    """Utility to determine the number of GPUs to use."""
+    return conf.train.pl_trainer.precision if torch.cuda.is_available() else 32
+
+
+
+def set_determinism_the_old_way(deterministic: bool):
+    # determinism for cudnn
+    if torch.cuda.is_available():
+        torch.backends.cudnn.deterministic = deterministic
+        if deterministic:
+            # fixing non-deterministic part of horovod
+            # https://github.com/PyTorchLightning/pytorch-lightning/pull/1572/files#r420279383
+            os.environ["HOROVOD_FUSION_THRESHOLD"] = str(0)
+
+def get_number_of_cpu_cores() -> int:
+    return cpu_count()
 
 
 def read_json(filename: str) -> dict:
     with open(filename, "r") as reader:
         return json.load(reader)
 
-def write_json(filename: str, dictionary: dict) -> dict:
+def write_json(filename: str, dictionary: dict) -> None:
     with open(filename, "w") as writer:
         json.dump(dictionary, writer, indent=4)
 

@@ -10,6 +10,7 @@ import numpy as np
 # our import
 from torchvision.transforms import transforms
 
+from src.common.utils import get_number_of_cpu_cores
 from src.select_image_folder import SelectedImageFolder
 import torch
 
@@ -144,14 +145,14 @@ class BasePLDataModule(pl.LightningDataModule):
             subset,  # self.train_dataset,
             batch_size=self.conf.data.batch_size.train,
             shuffle=True,
-            num_workers=self.conf.data.num_workers.train,
+            num_workers=get_number_of_cpu_cores(),
         )
 
     def val_dataloader(self, *args, **kwargs) -> Union[DataLoader, List[DataLoader]]:
         return DataLoader(
             self.validation_dataset,
             batch_size=self.conf.data.batch_size.val,
-            num_workers=self.conf.data.num_workers.val,
+            num_workers=get_number_of_cpu_cores(),
         )
 
     def test_dataloader(self, *args, **kwargs) -> Union[DataLoader, List[DataLoader]]:
@@ -159,7 +160,7 @@ class BasePLDataModule(pl.LightningDataModule):
         return DataLoader(
             self.test_dataset,
             batch_size=self.conf.data.batch_size.test,
-            num_workers=self.conf.data.num_workers.test,
+            num_workers=get_number_of_cpu_cores(),
         )
 
     def get_num_train_classes(self) -> int:

@@ -1,6 +1,9 @@
+log: false  # set to False to avoid the logging
+
+
 wandb:
-  project: covid-19-train-3090
-  entity: bacciu-taiello
+  project: name-of-your-project
+  entity: name-of-your-entity
   mode: 'online'
 
 watch:
