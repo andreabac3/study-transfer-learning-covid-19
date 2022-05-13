@@ -16,7 +16,7 @@ from pytorch_lightning import Callback
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, RichProgressBar
 from pytorch_lightning.loggers import WandbLogger
 
-from src.common.utils import load_envs, PROJECT_ROOT
+from src.common.utils import load_envs, PROJECT_ROOT, gpus, enable_16precision
 from src.pl_data_modules import BasePLDataModule
 from src.pl_modules import BasePLModule
 
@@ -83,7 +83,7 @@ def train(conf: omegaconf.DictConfig) -> None:
 
     # callbacks declaration
 
-    if "wandb" in conf.logging:
+    if conf.logging.wandb.log:
         class_to_use_str: str = (
             str(conf.labels.class_to_use)
             .strip("[]")
@@ -120,6 +120,8 @@ def train(conf: omegaconf.DictConfig) -> None:
         **conf.train.pl_trainer,
         callbacks=callbacks_store,
         logger=logger,
+        gpus=gpus(conf),
+        precision=enable_16precision(conf)
     )
     # module test
     model_path: str = (
@@ -131,7 +133,8 @@ def train(conf: omegaconf.DictConfig) -> None:
     pl_module = BasePLModule.load_from_checkpoint(best_model_ckpt, strict=False)
     trainer.test(pl_module, datamodule=pl_data_module)
 
-    logger.experiment.finish()
+    if conf.logging.wandb.log:
+        logger.experiment.finish()
 
 
 @hydra.main(config_path="../conf", config_name="root")
