@@ -1,0 +1,5 @@
+_target_: covid_bacteria
+class_to_use:
+  - COVID
+  - BACTERIA
+

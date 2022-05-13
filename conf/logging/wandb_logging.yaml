@@ -1,0 +1,9 @@
+wandb:
+  project: covid-19-train-3090
+  entity: bacciu-taiello
+  mode: 'online'
+
+watch:
+  log: 'all'
+  log_freq: 100
+

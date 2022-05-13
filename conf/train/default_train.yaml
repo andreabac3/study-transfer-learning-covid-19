@@ -1,0 +1,34 @@
+# reproducibility
+seed: 42
+
+# optimization
+pl_trainer:
+  gpus: 1
+  precision: 16
+  #amp_backend: 'apex'
+  #accumulate_grad_batches: 4
+  #gradient_clip_val: 10.0
+  max_epochs: 2
+  val_check_interval: 1.0
+  num_sanity_val_steps: 0
+  enable_progress_bar: True
+  deterministic: False
+  fast_dev_run: False
+
+
+model_checkpoint:
+  monitor: 'val_accuracy'
+  save_top_k: 1
+  mode: 'max'
+  verbose: False
+
+apply_early_stopping: True
+early_stopping:
+  monitor: 'val_accuracy'
+  mode: 'max'
+  patience: 50
+
+model_type: 'mobilenet_v2'
+
+# evaluation and persistence
+# model_name: ${model_type}  # used to name the directory in which model's checkpoints will be stored (experiments/model_name/...)

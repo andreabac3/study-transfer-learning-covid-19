@@ -1,0 +1,7 @@
+val_check_interval: 1.0
+progress_bar_refresh_rate: 20
+
+tensorboard:
+  save_dir: ${env:PROJECT_ROOT}/experiments/tb_logs
+  name: COVID-19
+

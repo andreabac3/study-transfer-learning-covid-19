@@ -1,0 +1,5 @@
+_target_: covid_normal_virus
+class_to_use:
+  - COVID
+  - NORMAL
+  - VIRUS

@@ -1,0 +1,4 @@
+_target_: covid_normal
+class_to_use:
+  - COVID
+  - NORMAL

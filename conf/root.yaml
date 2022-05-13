@@ -1,0 +1,7 @@
+defaults:
+  - train: default_train
+  - model: default_model
+  - hydra: default_hydra
+  - logging: wandb_logging
+  - data: mia_data
+  - labels: ffa

@@ -1,0 +1,6 @@
+_target_: ffa
+class_to_use:
+  - COVID
+  - BACTERIA
+  - VIRUS
+  - NORMAL
