@@ -38,11 +38,11 @@ bash setup.sh
 ## Dataset construction
 To be compliant to copyright issue, we release the file list that compose our dataset.
 To build the dataset: <br>
-(i) You should download the Kaggle data from the [competition page](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia). <br>
+(*i*) You should download the Kaggle data from the [competition page](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia). <br>
 
-(ii) For the covid data you can download the images from this [github repository](https://github.com/ieee8023/covid-chestxray-dataset). <br>
+(*ii*) For the covid data you can download the images from this [github repository](https://github.com/ieee8023/covid-chestxray-dataset). <br>
 
-(iii) The downloaded data must be re-arranged following the dataset structure present in the file [data/mia/dataset/dataset_structure.txt](https://github.com/andreabac3/study-transfer-learning-covid-19/blob/master/data/dataset_structure.txt) .
+(*iii*) The downloaded data must be re-arranged following the dataset structure present in the file [data/mia/dataset/dataset_structure.txt](https://github.com/andreabac3/study-transfer-learning-covid-19/blob/master/data/dataset_structure.txt) .
 ```
 mia
 └── dataset
