@@ -6,7 +6,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 # create conda env
 read -rp "Enter environment name: " env_name
 echo "In our experiments we used the python version: 3.7.11"
-read -rp "Enter python version (e.g. 3.7.11) " python_version
+read -rp "Enter python version (e.g. 3.7) " python_version
 conda create -yn "$env_name" python="$python_version"
 conda activate "$env_name"
 
