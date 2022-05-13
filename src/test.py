@@ -84,7 +84,7 @@ def train(conf: omegaconf.DictConfig) -> None:
 
     # callbacks declaration
 
-    if conf.logging.wandb.log:
+    if conf.logging.log:
         class_to_use_str: str = (
             str(conf.labels.class_to_use)
             .strip("[]")
@@ -121,8 +121,8 @@ def train(conf: omegaconf.DictConfig) -> None:
         **conf.train.pl_trainer,
         callbacks=callbacks_store,
         logger=logger,
-        gpus=gpus(conf),
-        precision=enable_16precision(conf)
+        #gpus=gpus(conf),
+        #precision=enable_16precision(conf)
     )
     # module test
     model_path: str = (
@@ -134,7 +134,7 @@ def train(conf: omegaconf.DictConfig) -> None:
     pl_module = BasePLModule.load_from_checkpoint(best_model_ckpt, strict=False)
     trainer.test(pl_module, datamodule=pl_data_module)
 
-    if conf.logging.wandb.log:
+    if conf.logging.log:
         logger.experiment.finish()
 
 

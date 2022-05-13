@@ -87,7 +87,7 @@ def train(conf: omegaconf.DictConfig) -> None:
         conf.train.pl_trainer.precision = 32
         conf.data.datamodule.num_workers = {k: 0 for k in conf.data.datamodule.num_workers}
         # Switch wandb mode to offline to prevent online logging
-        conf.logging.wandb_arg.mode = "offline"
+        conf.logging.wandb.mode = "offline"
 
     # data module declaration
     pl_data_module = BasePLDataModule(conf)
@@ -97,7 +97,7 @@ def train(conf: omegaconf.DictConfig) -> None:
 
     # callbacks declaration
 
-    if conf.logging.wandb.log:
+    if conf.logging.log:
         class_to_use_str: str = (
             str(conf.labels.class_to_use).strip("[]").replace(",", "-").replace("'", "").replace(" ", "")
         )
@@ -127,13 +127,13 @@ def train(conf: omegaconf.DictConfig) -> None:
         **conf.train.pl_trainer,
         callbacks=callbacks_store,  # [ImagePredictionLogger(samples, class_to_use_list=conf.class_to_use)],
         logger=logger,
-        gpus=gpus(conf),
-        precision=enable_16precision(conf)
+        #gpus=gpus(conf),
+        #precision=enable_16precision(conf)
     )
 
     # module fit
     trainer.fit(pl_module, datamodule=pl_data_module)
-    if conf.logging.wandb.log:
+    if conf.logging.log:
         logger.experiment.finish()
 
 
