@@ -27,7 +27,7 @@ This repository contains the official code of the research paper [Study on trans
 You can download a copy of all the files in this repository by cloning the
 [git](https://git-scm.com/) repository:
 ```sh
-git clone https://github.com/
+git clone https://github.com/andreabac3/study-transfer-learning-covid-19
 ```
 Then you should install all the dependencies. 
 To do this we suggest to use the setup.sh file to create a new conda environment.
@@ -42,7 +42,7 @@ To build the dataset: <br>
 
 (ii) For the covid data you can download the images from this [github repository](https://github.com/ieee8023/covid-chestxray-dataset). <br>
 
-(iii) The downloaded data must be re-arranged following the dataset structure present in the file data/mia/dataset/dataset_structure.txt .
+(iii) The downloaded data must be re-arranged following the dataset structure present in the file [data/mia/dataset/dataset_structure.txt](https://github.com/andreabac3/study-transfer-learning-covid-19/blob/master/data/dataset_structure.txt) .
 ```
 mia
 └── dataset
@@ -68,3 +68,4 @@ bash train_and_test.sh
 * **Alessio Fagioli**  - [github](https://sites.google.com/uniroma1.it/alessiofagioli-eng/home)
 * **Marco Raoul Marini**  - [website](https://www.marcoraoulmarini.it)
 * **Riccardo Taiello**  - [github](https://github.com/rtaiello) - [website](https://rtaiello.github.io)
+
