@@ -16,7 +16,7 @@ from pytorch_lightning import Callback
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, RichProgressBar
 from pytorch_lightning.loggers import WandbLogger
 
-from src.common.utils import load_envs, PROJECT_ROOT, gpus, enable_16precision
+from src.common.utils import load_envs, PROJECT_ROOT, gpus, enable_16precision, set_determinism_the_old_way
 from src.pl_data_modules import BasePLDataModule
 from src.pl_modules import BasePLModule
 
@@ -73,6 +73,7 @@ def train(conf: omegaconf.DictConfig) -> None:
     # reproducibility
 
     pl.seed_everything(conf.train.seed)
+    set_determinism_the_old_way(True)
     logger = None
 
     # data module declaration
